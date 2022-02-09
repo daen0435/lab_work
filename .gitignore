@@ -9,6 +9,8 @@ results/*
 work/*
 *.Rproj
 *.csv
+*.xlsx
+*.bed
 *.gtf
 *data*
 *.pdf
