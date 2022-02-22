@@ -1,0 +1,170 @@
+---
+title: "500obsAnal"
+author: "Cara and Dave"
+date: "2/21/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+install.packages("eulerr")
+library(eulerr)
+library(readxl)
+install.packages("writexl")
+library(writexl)
+```
+
+```{r}
+tadmaster <- read_excel("TAD_master.xlsx")
+summary(tadmaster)
+#here are some basic stats about our data set: we have 503 observations with a mean of 5.89 neighboring FA genes. Let's split up our data into genes with no neighbors, and those that do
+grouped_tadmaster <- dplyr::filter(tadmaster, fa_neighbor_hits >0)
+summary(grouped_tadmaster)
+```
+```{r}
+ggplot(tadmaster, aes(x= fa_neighbor_hits, y = value, color = series)) +
+  geom_jitter(aes(y=hmgb1_hits, col = "hmgb1_hits"))+
+  #geom_jitter(aes(y=hmgb2_hits, col = "hmgb2_hits"))+
+  #geom_jitter(aes(y=human_ntd_hits, col = "human_ntd_hits"))+
+  #geom_jitter(aes(y=mcc_hits, col = "MCC_hits"))+
+  #geom_jitter(aes(y=mouse_ntd_hits, col = "mouse_ntd_hits"))+
+  scale_color_manual(values = c("#228B22","#cc5500","#0000ff","#ff0000","#ffff00"))+
+  geom_smooth(aes(y=hmgb1_hits, col = "hmgb1_hits"))+
+  #geom_smooth(aes(y=hmgb2_hits, col = "hmgb2_hits"))+
+  #geom_smooth(aes(y=human_ntd_hits, col = "human_ntd_hits"))+
+  #geom_smooth(aes(y=mcc_hits, col = "MCC_hits"))+
+  #geom_smooth(aes(y=mouse_ntd_hits, col = "mouse_ntd_hits"))+
+  ylab("# Binding sites")+
+  xlab("# of adjacent FA sensitive genes")+
+  scale_x_continuous(breaks = c(0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30))+
+  theme(axis.text=element_text(size=17))+
+  theme(axis.title=element_text(size = 20,face="bold"))+
+  theme(legend.text = element_text(size=15))+
+  theme(legend.title = element_text(size=14,face="bold"))+
+  theme(axis.text.x=element_text(angle=))+
+  theme(legend.position = "top")+
+  ggtitle("HMGB1 vs FA sensitivity")+
+  theme(title = element_text(size=20,face="bold"))+
+  theme(axis.line.x.bottom = element_line(size=1))+
+  theme(axis.line.y.left = element_line(size=1))
+```
+```{r}
+ggplot(tadmaster, aes(x= fa_neighbor_hits, y = value, color = series)) +
+  geom_jitter(aes(y=hmgb1_hits, col = "hmgb1_hits"))+
+  geom_jitter(aes(y=hmgb2_hits, col = "hmgb2_hits"))+
+  #geom_jitter(aes(y=human_ntd_hits, col = "human_ntd_hits"))+
+  #geom_jitter(aes(y=mcc_hits, col = "MCC_hits"))+
+  #geom_jitter(aes(y=mouse_ntd_hits, col = "mouse_ntd_hits"))+
+  scale_color_manual(values = c("#228B22","#cc5500","#0000ff","#ff0000","#ffff00"))+
+  geom_smooth(aes(y=hmgb1_hits, col = "hmgb1_hits"))+
+  geom_smooth(aes(y=hmgb2_hits, col = "hmgb2_hits"))+
+  #geom_smooth(aes(y=human_ntd_hits, col = "human_ntd_hits"))+
+  #geom_smooth(aes(y=mcc_hits, col = "MCC_hits"))+
+  #geom_smooth(aes(y=mouse_ntd_hits, col = "mouse_ntd_hits"))+
+  ylab("# Binding sites")+
+  xlab("# of adjacent FA sensitive genes")+
+  scale_x_continuous(breaks = c(0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30))+
+  theme(axis.text=element_text(size=17))+
+  theme(axis.title=element_text(size = 20,face="bold"))+
+  theme(legend.text = element_text(size=15))+
+  theme(legend.title = element_text(size=14,face="bold"))+
+  theme(axis.text.x=element_text(angle=))+
+  theme(legend.position = "top")+
+  ggtitle("HMGB1/2 vs FA sensitivity")+
+  theme(title = element_text(size=20,face="bold"))+
+  theme(axis.line.x.bottom = element_line(size=1))+
+  theme(axis.line.y.left = element_line(size=1))
+```
+```{r}
+tad_tadmaster <- dplyr::filter(tadmaster, within_tad > 0)
+nontad_tadmaster <- dplyr::filter(tadmaster, within_tad == 0)
+chromsome_exclusion <- c(paste0("chr", 1:19),"chrX", "chrY")
+summary(tad_tadmaster)
+summary(nontad_tadmaster)
+```
+```{r}
+ggplot(tad_tadmaster, aes(x= fa_neighbor_hits, y = value, color = series)) +
+  geom_jitter(aes(y=hmgb1_hits, col = "hmgb1_hits"))+
+  geom_jitter(aes(y=hmgb2_hits, col = "hmgb2_hits"))+
+  #geom_jitter(aes(y=human_ntd_hits, col = "human_ntd_hits"))+
+  #geom_jitter(aes(y=mcc_hits, col = "MCC_hits"))+
+  #geom_jitter(aes(y=mouse_ntd_hits, col = "mouse_ntd_hits"))+
+  scale_color_manual(values = c("#228B22","#cc5500","#0000ff","#ff0000","#ffff00"))+
+  geom_smooth(aes(y=hmgb1_hits, col = "hmgb1_hits"))+
+  geom_smooth(aes(y=hmgb2_hits, col = "hmgb2_hits"))+
+  #geom_smooth(aes(y=human_ntd_hits, col = "human_ntd_hits"))+
+  #geom_smooth(aes(y=mcc_hits, col = "MCC_hits"))+
+  #geom_smooth(aes(y=mouse_ntd_hits, col = "mouse_ntd_hits"))+
+  ylab("# Binding sites")+
+  xlab("# of adjacent FA sensitive genes")+
+  scale_x_continuous(breaks = c(0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30))+
+  theme(axis.text=element_text(size=17))+
+  theme(axis.title=element_text(size = 20,face="bold"))+
+  theme(legend.text = element_text(size=15))+
+  theme(legend.title = element_text(size=14,face="bold"))+
+  theme(axis.text.x=element_text(angle=))+
+  theme(legend.position = "top")+
+  ggtitle("HMGB1/2 vs FA sensitivity", subtitle = "Genes within a TAD")+
+  theme(title = element_text(size=20,face="bold"))+
+  theme(axis.line.x.bottom = element_line(size=1))+
+  theme(axis.line.y.left = element_line(size=1))
+```
+```{r}
+ggplot(nontad_tadmaster, aes(x= fa_neighbor_hits, y = value, color = series)) +
+  geom_jitter(aes(y=hmgb1_hits, col = "hmgb1_hits"))+
+  geom_jitter(aes(y=hmgb2_hits, col = "hmgb2_hits"))+
+  #geom_jitter(aes(y=human_ntd_hits, col = "human_ntd_hits"))+
+  #geom_jitter(aes(y=mcc_hits, col = "MCC_hits"))+
+  #geom_jitter(aes(y=mouse_ntd_hits, col = "mouse_ntd_hits"))+
+  scale_color_manual(values = c("#228B22","#cc5500","#0000ff","#ff0000","#ffff00"))+
+  geom_smooth(method = "lm", aes(y=hmgb1_hits, col = "hmgb1_hits"))+
+  geom_smooth(method = "lm", aes(y=hmgb2_hits, col = "hmgb2_hits"))+
+  #geom_smooth(aes(y=human_ntd_hits, col = "human_ntd_hits"))+
+  #geom_smooth(aes(y=mcc_hits, col = "MCC_hits"))+
+  #geom_smooth(aes(y=mouse_ntd_hits, col = "mouse_ntd_hits"))+
+  ylab("# Binding sites")+
+  xlab("# of adjacent FA sensitive genes")+
+  scale_x_continuous(breaks = c(0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30))+
+  theme(axis.text=element_text(size=17))+
+  theme(axis.title=element_text(size = 20,face="bold"))+
+  theme(legend.text = element_text(size=15))+
+  theme(legend.title = element_text(size=14,face="bold"))+
+  theme(axis.text.x=element_text(angle=))+
+  theme(legend.position = "top")+
+  ggtitle("HMGB1/2 vs FA sensitivity", subtitle = "Genes within a TAD")+
+  theme(title = element_text(size=20,face="bold"))+
+  theme(axis.line.x.bottom = element_line(size=1))+
+  theme(axis.line.y.left = element_line(size=1))
+```
+```{r}
+ggplot(tad_tadmaster, aes(x= fa_neighbor_hits, y = value, color = series)) +
+  geom_jitter(aes(y=hmgb1_hits, col = "hmgb1_hits"))+
+  geom_jitter(aes(y=hmgb2_hits, col = "hmgb2_hits"))+
+  geom_jitter(aes(y=human_ntd_hits, col = "human_ntd_hits"))+
+  geom_jitter(aes(y=mcc_hits, col = "MCC_hits"))+
+  geom_jitter(aes(y=mouse_ntd_hits, col = "mouse_ntd_hits"))+
+  scale_color_manual(values = c("#228B22","#cc5500","#0000ff","#ff0000","#ffff00"))+
+  geom_smooth(aes(y=hmgb1_hits, col = "hmgb1_hits"))+
+  geom_smooth(aes(y=hmgb2_hits, col = "hmgb2_hits"))+
+  geom_smooth(aes(y=human_ntd_hits, col = "human_ntd_hits"))+
+  geom_smooth(aes(y=mcc_hits, col = "MCC_hits"))+
+  geom_smooth(aes(y=mouse_ntd_hits, col = "mouse_ntd_hits"))+
+  ylab("# Binding sites")+
+  xlab("# of adjacent FA sensitive genes")+
+  scale_x_continuous(breaks = c(0,1,2,3,3,4,5,6,7,8,9))+
+  theme(axis.text=element_text(size=17))+
+  theme(axis.title=element_text(size = 20,face="bold"))+
+  theme(legend.text = element_text(size=15))+
+  theme(legend.title = element_text(size=14,face="bold"))+
+  theme(axis.text.x=element_text(angle=))+
+  theme(legend.position = "top")+
+  ggtitle("HMGB1/2 vs FA sensitivity", subtitle = "Genes within a TAD")+
+  theme(title = element_text(size=20,face="bold"))+
+  theme(axis.line.x.bottom = element_line(size=1))+
+  theme(axis.line.y.left = element_line(size=1))
+```
+
