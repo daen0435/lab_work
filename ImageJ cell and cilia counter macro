@@ -1,0 +1,31 @@
+title = getTitle();
+run("Split Channels");
+selectWindow("C1-"+title);
+run("8-bit");
+run("Auto Threshold", "method=Triangle white");
+run("Watershed");
+run("Analyze Particles...", "size=50-Infinity circularity=0.00-1.00 show=Nothing summarize");
+selectWindow("C3-"+title);
+run("8-bit");
+run("Auto Threshold", "method=RenyiEntropy white");
+run("Open");
+selectWindow("C2-"+title);
+run("8-bit");
+run("Auto Threshold", "method=RenyiEntropy white");
+run("Open");
+run("Analyze Particles...", "size=.2-Infinity circularity=0.00-1.00 show=Nothing add");
+roiManager("Show All with labels");
+roiManager("Show All");
+for (i = 0; i < roiManager("count"); i++) {
+	roiManager("select", i);
+	run("Enlarge...", "enlarge=3");
+	roiManager("update");
+};
+selectWindow("C3-"+title);
+for (i = 0; i < roiManager("count"); i++) {
+	roiManager("select", i);
+	run("Enlarge...", "enlarge=3");
+	run("Analyze Particles...", "size=1-Infinity circularity=0.00-1.00 show=Nothing summarize");
+};
+IJ.renameResults("Summary", "Results");
+run("Read and Write Excel");
